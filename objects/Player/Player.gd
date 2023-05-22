@@ -17,11 +17,18 @@ onready var menuNode = get_node("/root/GameRoom/PausedLayer/PausedMenu")
 
 
 func _input(event):
+	
+	if ((event is InputEventKey) and (not Level.gameEnded) and (GameInput.playersType[playerIndex - 1] == 2) and (event.scancode == KEY_0) and (not event.is_pressed())):
+		menuNode.game_paused(playerIndex - 1)
+	
 	if ((event is InputEventKey) and (not Level.gameEnded) and (GameInput.playersType[playerIndex - 1] == 0) and (GameInput.keyboardUsed) and (event.scancode == KEY_ESCAPE) and (not event.is_pressed())):
 		menuNode.game_paused(playerIndex - 1)
 	
 	if ((event is InputEventJoypadButton) and (not Level.gameEnded) and (GameInput.playersType[playerIndex - 1] == 1) and (GameInput.usedGamepads.has(event.device)) and (event.button_index == 11) and (not event.is_pressed())):
 		menuNode.game_paused(playerIndex - 1)
+	
+	if ((event is InputEventKey) and (not Level.gameEnded) and (GameInput.playersType[playerIndex - 1] == 2) and (event.scancode == KEY_9) and (not event.is_pressed())):
+		start_special()
 	
 	if ((event is InputEventKey) and (not Level.gameEnded) and (GameInput.playersType[playerIndex - 1] == 0) and (GameInput.keyboardUsed) and (event.scancode == KEY_SPACE) and (not event.is_pressed())):
 		start_special()
@@ -30,7 +37,6 @@ func _input(event):
 		start_special()
 
 func destroyed():
-	if specialActivated and (Level.playerCharacters[playerIndex - 1] == 0): return
 	if (Level.gameEnded): return
 	_on_SpecialTimer_timeout()
 	Music.breakSFX.play()
@@ -59,7 +65,9 @@ func _ready():
 
 
 func start_special():
+	if specialActivated: return
 	if (specialAvailable <= 0) or isColdown or isDestroyed: return
+	if Level.playerCharacters[playerIndex - 1] == 0: get_node("CollisionShape2D").set_deferred("disabled", true)
 	if Level.playerCharacters[playerIndex - 1] == 1: specialMulti = 1.6
 	if Level.playerCharacters[playerIndex - 1] == 2: thirdSpecial = true
 	specialAvailable -= 1
@@ -73,6 +81,7 @@ func _on_SpecialTimer_timeout():
 	specialActivated = false
 	thirdSpecial = false
 	$Special.visible = false
+	if Level.playerCharacters[playerIndex - 1] == 0: get_node("CollisionShape2D").set_deferred("disabled", false)
 
 func use_friction(realAceleration):
 	if (velocity.length() > realAceleration):

@@ -30,9 +30,5 @@ func _process(delta):
 
 func _on_Bullet_body_entered(body):
 	if (body.isPlayer and !body.isDestroyed and !body.isColdown):
-		#Level.bulletActivate = false
-		if body.thirdSpecial:
-			queue_free()
-			return
-		body.destroyed()
-		#Level.restart_level()
+		if body.thirdSpecial: queue_free()
+		else: body.destroyed()

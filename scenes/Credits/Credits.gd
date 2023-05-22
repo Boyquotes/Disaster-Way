@@ -2,11 +2,14 @@ extends VBoxContainer
 
 var currentPanel = 0
 onready var panels = [
+	get_node("HBoxContainer/MarginContainer/GeneralCredits"),
 	get_node("HBoxContainer/MarginContainer/MusicCredits"),
-	get_node("HBoxContainer/MarginContainer/SFXCredits")
+	get_node("HBoxContainer/MarginContainer/SFXCredits1"),
+	get_node("HBoxContainer/MarginContainer/SFXCredits2")
 ]
 
 func _ready():
+	if (GameInput.playersType[0] == 2): get_node("ControlsMargin").visible = false
 	get_node("ControlsMargin/Controls/MarginContainer2/HBoxContainer/TextureRect3").texture = GameInput.get_button_icon_image("back")
 	get_node("HBoxContainer/MarginContainer2/CenterContainer2/Player-left/TextureRect").texture = GameInput.get_button_icon_image("left")
 	get_node("HBoxContainer/MarginContainer3/CenterContainer2/Player-right/TextureRect").texture = GameInput.get_button_icon_image("right")
